@@ -1,8 +1,23 @@
-const express = require("express");
+const express = require('express');
+const routerApi = require('./routes');
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler,
+} = require('./middlewares/error.handle');
+
 const app = express();
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+app.use(express.json());
+routerApi(app);
+app.get('/', (req, res) => res.send('Express on Vercel'));
 
-app.listen(3001, () => console.log("Server ready on port 3000."));
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler);
+
+app.listen(3001, () => {
+  console.log(`Prendido papa lindo at http://localhost:3001`);
+});
 
 module.exports = app;
